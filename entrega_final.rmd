@@ -246,19 +246,32 @@ head(nodes[order(degree(network.full, v = V(network.full), mode = c("out")), dec
 
 ```
 
-
 Podemos ver que Dasovich, con el cargo de empleado, es con diferencia el que más correos ha enviado. Investigango su cargo en Enron, resulta que era el mayor ejecutivo de relaciones con el gobierno, lo cual explica las grandes cantidades de mail enviados por su parte.
 
+También podemos observar que Shapiro, uno de los vicepresidentes, es el que más correos ha recibido. Esto lo pone en una situación similar a la de Barbo, dando a entender que era una persona muy solicitada.
 
+### 2.4.2 Alcance de un vértice
+El alcance de un vértice nos permite saber a cuántos empleados llega el nodo que designemos con un salto determinado. Es más fácil entenderlo con un ejemplo visual.
 
+![GraphEnron](.\Grafos\GrafoEjemplo.jpg)
 
+En este grafo, podemos ver que Hold tiene a un alcance de 2 saltos a Jules, Bob y John.
 
+Esta propiedad de un nodo nos permite analizar como de alto es el nivel de control o comunicación que tiene una persona sobre el resto en Enron. Con el siguiente código veremos los 10 primeros empleados que llegan a más personas con tan sólo 2 saltos.
 
+```{r}
+nodes$reach_2_step <- 
+  neighborhood.size(network.full, 
+                    order = 2,
+                    nodes = V(network.full), 
+                    mode  = c("all"))
 
+head(nodes[order(nodes$reach_2_step,
+                 decreasing = TRUE),], n = 10L)
 
+```
 
-
-
+Podemos observar que Presto, Vicepresidente, es de los empleados más influyentes de Enron, pudiendo comunicarse con el 100% de la plantilla con máximo un intermediario.
 
 
 
