@@ -162,7 +162,21 @@ nodes[c(farthest.nodes(network.full)[["vertices"]]),]
 ```
 
 ### 2.3.3 Reciprocidad
+La reprocidad de un grafo es la probabilidad de que nodos en un conjunto dirigido estén conectados directamente. Esta medida nos permite ver como de interconectado está el grafo entre sí.
 
+En este grafo, el índice de reciprocidad es muy bajo, ya que los nodos están muy poco conectados entre sí.
+
+![GraphEnron](.\Grafos\GrafoEjemplo.jpg)
+
+Por otro lado, el índice de reciprocidad en este otro ejemplo es altísimo, ya que los nodos están muy conectados entre sí.
+
+![GraphEnron](.\Grafos\GrafoEjemploReciprocidad.jpg)
+
+Para ver el índice de reciprocidad del dataset de Enron, utilizaremos la función "reciprocity". Nos da un resultado de 0.421992, lo que indica que en el grafo hay muchas conexiones pero no está completamente conectado entre sí.
+
+```{r}
+reciprocity(network.full)
+```
 
 ### 2.3.4 Densidad
 
