@@ -1,0 +1,125 @@
+# 1. Primeros pasos
+## 1.1 Cargamos librerías y dataset
+```{r}
+setwd("C:/Users/Javs/Downloads/Clase/3/3.2/BusquedaYAnalisisDeLaInformacion/Final")
+load("enron_data_revised.rda")
+library(igraph)
+library(gplots)
+```
+
+## 1.2 Antes de empezar, hemos de entender las características del dataset
+Enron fue una empresa energética estadounidense que, a principios de los 2001, quebró inesperadamente tras hacerse público un escándalo relacionado con prácticas irregulares de contabilidad. Al cabo de un tiempo, se publicaron en forma de dataset una lista de emails que probaban estas malas prácticas y es ese el dataset sobre el que vamos a trabajar.
+
+Este dataset contiene vértices; que representan empleados de enron, y aristas; que representan emails enviados entre los diferentes empleados.
+
+## 1.3 Veamos primero las dimensiones de los datos
+```{r}
+print("El número de aristas en el dataset:")
+nrow(edges.full)
+print("La descripción del objeto 'aristas':")
+str(edges.full)
+print("El número de nodos en el dataset:")
+nrow(nodes)
+print("La descripción del objeto 'aristas':")
+str(nodes)
+```
+
+
+# 2. Grafos
+## 2.1 Creado y propiedades del grafo
+El siguiente paso será generar un grafo a partir del dataset de Enron.
+
+Para ello, concatenaremos en un objeto nuevo los parámetros que queramos en el grafo. En este caso 'emisor', 'receptor', 'tipo', 'fecha' y 'sujeto'. Es importante destacar que queremos un grafo dirigido, ya que los emails tienen emisor y destinatario. El último parámetro le indica a la función que los vértices del grafo tiene que sacarlos del objeto 'nodos'.
+
+```{r}
+network.full <- graph.data.frame(edges.full[,c("sender",
+                                               "receiver",
+                                               "type",
+                                               "date",
+                                               "subject")],
+                                              directed = TRUE,
+                                              vertices = nodes)
+
+class(network.full)
+summary(network.full)
+```
+
+Con igraph podemos acceder a los nodos con la keyword V (vertice) y a las aristas con E (edge).
+
+Las siguientes líneas nos muestran los diez primeros vértices (empleados de enron) y las dies primeras aristas (mails intercambiados entre empleados).
+
+```{r}
+V(network.full)[1:10]
+E(network.full)[1:10]
+```
+
+También podemos introducir estas keywords en una tabla como parámetros. En el ejemplo de abajo estamos pasando todos los "status" (posición en la empresa) posibles a una tabla, lo que nos muestra el total de nodos (empleados) que tiene cada "status".
+
+```{r}
+table(V(network.full)$status)
+```
+
+## 2.2 Uso del grafo
+Los grafos son una herramienta muy útil para entender las propiedades de las relaciones de un conjunto de datos. Nos pueden mostrar cantidades enormes de información que, de otro modo, sería mucho más difícil encontrar.
+
+Uno de las mejores ventajas de los grafos es su propiedad visual; relacionar vértices con aristas es muy intuitivo, sencillo y eficaz, lo que facilita enormemente construir observaciones complejas sobre las interacciones simples del conjunto de datos.
+
+La desventaja que tienen los grafos es que el ojo humano no puede entender la complejidad del enramado de un grafo mirando una tabla de relaciones; para nosotros es mucho más rápido entender un grafo mediante un esquema o dibujo. Por eso mismo y porque R no puede correrlo nativamente, utilizaremos una herramienta externa llamada Gephi, que nos ayudará a visualizar los mails de Enron una vez tengamos un grafo que podamos introducirle.
+
+Para exportar nuestro grafo enronense a un lenguaje que Gephi entienda, utilizaremos el siguiente código:
+
+```{r}
+
+write.graph(network.full,
+            file = "enron_graph_1.graphml",
+            format = "graphml")
+```
+
+El código superior muestra claramente como transformamos nuestro grafo creado en el punto 2.1 (network) en un archivo de extensión "graphml". La extensión "graphml" está conmstruida sobre XML y permite describir las propiedades estructurales de casi cualquier grafo.
+
+Una vez tenemos nuestro archivo "graphml", lo introduciremos en Gephi.
+
+En Gephi, podemos trabajar directamente con las propiedades visuales del grafo, nada más introducirlo, se verá así:
+
+![Graph] (.\Grafos\First.jpg)
+
+Con el objetivo de hacer más comprensible el grafo, organizaremos los nodos y aristas con colores en base a el número de conexiones entrantes y salientes; es decir, los empleados que más emails enviaron se verán de un color (en nuestro caso naranja) y lo que menos de otro (morado), estando el resto de empleados en un gradiente entre esos colores.
+
+![Graph] (.\Grafos\FirstColor.jpg)
+
+Otra ayuda visual es la disposición del grafo, como vemos es extremadamente caótico y, aunque los colores ayudan, es completamente ilegible. Para ello, lo estructuraremos mediante una disposición predeterminada:
+
+![Graph] (.\Grafos\FirstColorDisp.jpg)
+
+Por último, en la pestaña de previsualización, le daremos los úlitmos retoques de formato para que sea fácil de comprender entero de un vistazo. Para conseguir esto haremos muchos cambios estéticos, desde el tamaño de las aristas hasta el texto que muestran las etiquetas. El resultafo final es el siguiente:
+
+
+![Graph] (.\GrafoEnron1.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
