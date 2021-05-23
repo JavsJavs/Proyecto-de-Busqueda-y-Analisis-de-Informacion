@@ -201,6 +201,49 @@ El "triad_census" nos muestra el número de subgrafos de tres vértices que est�
 summary(triad_census(network.full))
 ```
 
+## 2.4 Propiedades de los componentes del grafo
+Una vez hemos entendido las características y operaciones gráficas que podemos realizar sobre un grafo, vamos a realizar operaciones similares pero sobre los componentes del mismo grafo.
+
+### 2.4.1 Grado de un vértice
+El grado de un vértice mide el número de aristas que están directamente conectadas con el mismo. En un grafo dirigido hay tres tipos de grado:
+
+- Grado de entrada: número de vértices que tienen como destino este nodo ("degree mode in").
+- Grado de salida: número de vértices que tienen como origen este nodo ("degree mode out").
+- Grado total: suma del grado de entrada y de salida de un nodo ("degree mode total").
+
+Veamos el grado entrante, saliente y total del comerciante Barbo. Para ello haremos uso del siguiente código:
+
+```{r}
+degree(network.full, v = V(network.full)[lastName == "Barbo"], mode = c("total"))
+
+degree(network.full, v = V(network.full)[lastName == "Barbo"], mode = c("in"))
+
+degree(network.full, v = V(network.full)[lastName == "Barbo"], mode = c("out"))
+
+```
+
+Vemos que el grado de entrada es 451, el de salida es 104 y el total la suma de ambos, 555. De estas operaciones tan sencillas sacamos informaciión relevante, como que Barbo era muy solicitado en Enron ya que le llegaban muchos más mails de los que recibía.
+
+A las funciones "degree" podemos pasarle más de un vértice, en los siguientes ejemplos podemos observar los 10 empleados que más grado de entrada, salida y total tienen por separado.
+
+```{r}
+head(nodes[order(degree(network.full, v = V(network.full), mode = c("total")), decreasing = TRUE),], n = 10L)
+
+```
+
+
+```{r}
+head(nodes[order(degree(network.full, v = V(network.full), mode = c("in")), decreasing = TRUE),], n = 10L)
+
+```
+
+```{r}
+head(nodes[order(degree(network.full, v = V(network.full), mode = c("out")), decreasing = TRUE),], n = 10L)
+
+```
+
+
+Podemos ver que Dasovich, con el cargo de empleado, es con diferencia el que más correos ha enviado. Investigango su cargo en Enron, resulta que era el mayor ejecutivo de relaciones con el gobierno, lo cual explica las grandes cantidades de mail enviados por su parte.
 
 
 
