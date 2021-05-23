@@ -309,9 +309,65 @@ La reciprocidad del grafo ha aumentado mucho. Esto quiere decir que hemos creado
 
 Puede sorprender de primeras que la transitividad se mantiene igual que antes, no obstante, eso es buena señal. Quiere decir que lo hemos hecho bien, ya que no hemos cambiado la probabilidad de interconexión de grafos adyacentes, si estaban interconectados se quedaron así, y si no, se eliminaron sus aristas unidireccionales (las cuales no influyen en la transitividad).
 
-Ahora que tenemos este grafo social, exportémoslo a "graphml" para poder analizarlo con Gephi (seguiré los mismos pasos que con el grafo completo). El resultado final es el siguiente.
+Ahora que tenemos este grafo social, exportémoslo a "graphml" para poder analizarlo con Gephi (seguiré los mismos pasos que con el grafo completo).
 
-![GraphEnron](.\Grafos\GrafoSocial.jpg)
+```{r}
+
+write.graph(network.sna,
+            file = "enron_social_graph_1.graphml",
+            format = "graphml")
+```
+
+El resultado final es el siguiente.
+
+![GraphEnron](.\Grafos\GrafoSocialEnron.png)
+
+Si los ponemos uno al lado del otro, podemos ver que este grafo es mucho más estructurado e interconectado que el grafo del dataset completo. Pero de todas formas es difícil sacar conclusiones en claro.
+
+Grafo original             |  Grafo social
+:-------------------------:|:-------------------------:
+![GraphEnron](.\Grafos\GrafoEnron.png)  |  ![GraphEnron](.\Grafos\GrafoSocialEnron.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
