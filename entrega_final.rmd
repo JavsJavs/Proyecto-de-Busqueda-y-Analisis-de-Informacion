@@ -354,10 +354,10 @@ enronMatriz1 <- dfm(palabras, tolower = TRUE)
 Antes de realizar operaciones, comprobemos cuáles son las palabras más frecuentes en el dataset.
 
 ```{r}
-topfeatures(textoMatriz)
+topfeatures(enronMatriz1)
 ```
 
-Estas palabras no nos dicen nada acerca de las conversaciones que tienen los empleados de enron, así que comencemos a filtrar palabras y expresiones comunes que tengan poco significado para nuestro análisis.
+Estas palabras no nos dicen nada acerca de las conversaciones que tienen los empleados de enron, así que comencemos a filtrar palabras y expresiones comunes que tengan poco significado para nuestro análisis. Una vez filtrado, veamos las palabras más frecuentes.
 
 ```{r}
 palabras2 <- tokens(enronCorpus, 
@@ -365,37 +365,88 @@ palabras2 <- tokens(enronCorpus,
                             remove_numbers = TRUE,
                             remove_url = TRUE,
                             remove_symbols = TRUE)
-my_stopwords <- c(as.character(c(0:9)), stopwords("english"), "now")
-
+my_stopwords <- c(as.character(c(0:9)), stopwords("english"), "now", "s", "hou", "enron", "e-mail", "na", "california", "subject", "gas", "power", "please", "t", "d", "pm", "am", "may", "energy", "pg", "e", "america", "north", "original", "message", "sent", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "j", "october", "pmto", "deliveries", "mmbtu", "forwarded", "3d", "see", "attached", "file", "whalley713.853.1935", "taylorassistant", "k", "eb", "greg", "_office713.853.1838", "fax713.854.3056", "713-646-3393", "fax", "mobile", "phone", "office713.853.1838")
 enronMatriz2 <- dfm(palabras2, tolower = TRUE)
 enronMatriz2 <- dfm_remove(enronMatriz2, my_stopwords)
-print("'Top features' de la matriz sin las stopwords: ")
 topfeatures(enronMatriz2)
 ```
 
+Estas palabras nos pueden decir mucho más sobre los mensajes si las relacionamos entre sí.
 
+## 3.3 Creación de bigramas y trigramas
+Ahora crearemos los enegramas (en este caso de 2 y de 3). Estos enegramas nos permitirán ver que palabras se relacionan entre sí más a menudo. Imprimiremos los 10 primeros enegramas de cada tipo para comprobar que ha funcionado.
 
+```{r}
+palabras3 <- tokens_select(palabras2,
+                           pattern = my_stopwords,
+                           selection = "remove")
+palabras4 <- tokens_ngrams(palabras3, n = 2)
+enronMatrizBigrama <- dfm(palabras4, tolower = TRUE)
+palabras5 <- tokens_ngrams(palabras3, n = 3)
+enronMatrizTrigrama <- dfm(palabras5, tolower = TRUE)
+```
 
+```{r}
+topfeatures(enronMatrizBigrama, 10)
+```
 
+```{r}
+topfeatures(enronMatrizTrigrama, 10)
+```
 
+Vemos que la mayoría de bigramas son nombres propios, es algo que nos va a ser difícil de eliminar, por lo que creo que los trigramas divididos en tópicos pueden ser más interesantes.
 
+## 3.4 Wordcloud
+Para poder visualizar estos enegramas que hemos creado, haremos uso de una herramienta llamada WordCloud, que nos permitirá mostrar los diferentes conjuntos de palabras relacionadas en una nube de palabras de forma ordenada y jerárquica.
 
+### 3.4.1 Bigramas
+Primero generaremos el WordCloud de los bigramas. Utilizaremos el código siguiente.
 
+```{r}
+set.seed(100)
+png(filename = "wordcloud_enron_bigrams.png",
+    width = 3000, 
+    height = 3000)
+textplot_wordcloud(enronMatrizBigrama, 
+                   min_count = 10, 
+                   random_order = FALSE,
+                   rotation = 0, 
+                   color = RColorBrewer::brewer.pal(8,"Dark2"))
+```
 
+Esto nos produce la siguiente imagen:
 
+![GraphEnron](.\wordcloud_enron_bigrams.png)
 
+Esta nube de palabras es muy interesante, vemos que el bigrama más mencionado con diferencia es Jeff Dasovich. Esto apunta muchos interrogantes sobre esta persona y conocer que su mención era tan frecuente seguro ayudó a las autoridades con la investigación de las prácticas ilegales de Enron.
 
+El otro bigrama que me gustaría destacar es "el paso". De primeras pensé que se trataría de una ciudad o de la compañía alimentica; no obstante, tras investigar, he descubierto que "El Paso Corp" era otra compañía eléctrica que fue sospechosa del mismo escándalo de Enron. Siendo rivales, es lógico que se hablase mucho de ellos en los emails.
 
+### 3.4.1 Trigramas
+A continuación generaremos el WordCloud de los trigramas. Utilizaremos el código siguiente.
 
+```{r}
+set.seed(20)
+png(filename = "wordcloud_enron_trigrams.png",
+    width = 3000, 
+    height = 3000)
+textplot_wordcloud(enronMatrizTrigrama, 
+                   min_count = 1, 
+                   random_order = FALSE,
+                   rotation = 0, 
+                   color = RColorBrewer::brewer.pal(8,"Dark2"))
+```
 
+Esto nos produce la siguiente imagen:
 
+![GraphEnron](.\wordcloud_enron_trigrams.png)
 
+Esta nube es menos interesante en mi opinión ya que los trigramas parecen no dar mucha información, como si no fuesen tan comunes. Invesitgué quien era Carol St Clair, resulta que era la asistente y consejera general de la compañía; tiene sentido que, como asistente, se viese mencionada en muchos correos.
 
+## 3.5 Tópicos
+Por último, estudiaremos los diferentes tópicos que se generan automáticamente por R. Para ello, generaremos diferentes WordClouds según los tópicos generados, tanto para bigramas como para trigramas.
 
-
-
-
-
+### 3.5.1 Tópicos de bigramas
 
 
 
