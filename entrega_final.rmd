@@ -195,9 +195,11 @@ edge_density(network.full)
 ```
 
 ### 2.3.5 Censo de triadas
+El "triad_census" nos muestra el número de subgrafos de tres vértices que están incluidos dentro de un grafo dirigido. Aplicado a el dataset de enron nos devuelve lo siguiente:
 
-
-
+```{r}
+summary(triad_census(network.full))
+```
 
 
 
