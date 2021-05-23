@@ -273,8 +273,45 @@ head(nodes[order(nodes$reach_2_step,
 
 Podemos observar que Presto, Vicepresidente, es de los empleados más influyentes de Enron, pudiendo comunicarse con el 100% de la plantilla con máximo un intermediario.
 
+## 2.5 Grafo social
+Un grafo social nos permitiría entender más en profundidad los roles comunicativos que representan los diferentes empleados. Un grafo social tiene la característica de que todos los nodos que estén conectados han de estar interconectados, es decir, hemos de filtrar aquellas conexiones que sean unidireccionales.
 
+Antes de crear el grafo social de enron, recordaremos que la reciprocidad del grafo original es 0.4291992 y la transitividad es 0.4212257.
 
+Para conseguir este grafo social utilizaremos el código siguiente.
+
+```{r}
+pairs <- as.data.frame(unique(edges.full[c(1,2)]))
+pairs <- pairs[order(pairs$sender, pairs$receiver),]
+edges.ordered <- edges.full[order(edges.full$sender, edges.full$receiver),]
+weight <- aggregate(edges.ordered[,3],
+                by = list(edges.ordered[,1],
+                          edges.ordered[,2]),
+                length) 
+weight <- weight[order(weight$Group.1, weight$Group.2),]
+pairs$weight <- weight$x
+head(pairs)
+network.sna <- graph.data.frame(pairs,
+                            directed = TRUE,
+                            vertices = nodes)
+```
+
+Ahora que ya lo hemos creado, comprobemos la reciprocidad y la transitividad del nuevo grafo.
+
+```{r}
+print("Reciprocidad: ")
+reciprocity(network.sna)
+print("Transitividad: ")
+transitivity(network.sna)
+```
+
+La reciprocidad del grafo ha aumentado mucho. Esto quiere decir que hemos creado bien el grafo, ya que es mucho más probable ahora que dos nodos estén conectados. De hecho el 0.39 restante se debe a nodos que no están conectados.
+
+Puede sorprender de primeras que la transitividad se mantiene igual que antes, no obstante, eso es buena señal. Quiere decir que lo hemos hecho bien, ya que no hemos cambiado la probabilidad de interconexión de grafos adyacentes, si estaban interconectados se quedaron así, y si no, se eliminaron sus aristas unidireccionales (las cuales no influyen en la transitividad).
+
+Ahora que tenemos este grafo social, exportémoslo a "graphml" para poder analizarlo con Gephi (seguiré los mismos pasos que con el grafo completo). El resultado final es el siguiente.
+
+![GraphEnron](.\Grafos\GrafoSocial.jpg)
 
 
 
