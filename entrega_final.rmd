@@ -179,7 +179,20 @@ reciprocity(network.full)
 ```
 
 ### 2.3.4 Densidad
+La densidad de un grafo hace referencia a la relación entre el número de aristas de un grafo y el número máximo que podría tener el mismo grafo.
 
+![GraphEnron](.\Grafos\GrafoEjemploReciprocidad.jpg)
+
+Si observamos el ejemplo anterior, podemos ver que se trata de un grafo muy denso. Si nos fijamos en el siguiente, vemos que se trata de un grafo muy poco denso, ya que hay pocas aristas en relación a las que podría haber.
+
+![GraphEnron](.\Grafos\GrafoEjemplo.jpg)
+
+Para averiguar la densidad del grafo de enron, haremos uso de "edge_density":
+
+```{r}
+edge_density(network.full)
+
+```
 
 ### 2.3.5 Censo de triadas
 
