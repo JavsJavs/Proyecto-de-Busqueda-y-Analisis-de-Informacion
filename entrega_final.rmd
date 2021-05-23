@@ -60,6 +60,7 @@ table(V(network.full)$status)
 ```
 
 ## 2.2 Uso del grafo
+### 2.2.1 Visualización del grafo
 Los grafos son una herramienta muy útil para entender las propiedades de las relaciones de un conjunto de datos. Nos pueden mostrar cantidades enormes de información que, de otro modo, sería mucho más difícil encontrar.
 
 Uno de las mejores ventajas de los grafos es su propiedad visual; relacionar vértices con aristas es muy intuitivo, sencillo y eficaz, lo que facilita enormemente construir observaciones complejas sobre las interacciones simples del conjunto de datos.
@@ -81,26 +82,32 @@ Una vez tenemos nuestro archivo "graphml", lo introduciremos en Gephi.
 
 En Gephi, podemos trabajar directamente con las propiedades visuales del grafo, nada más introducirlo, se verá así:
 
-![Graph] (.\Grafos\First.jpg)
+![GraphFirst](.\Grafos\First.jpg)
 
 Con el objetivo de hacer más comprensible el grafo, organizaremos los nodos y aristas con colores en base a el número de conexiones entrantes y salientes; es decir, los empleados que más emails enviaron se verán de un color (en nuestro caso naranja) y lo que menos de otro (morado), estando el resto de empleados en un gradiente entre esos colores.
 
-![Graph] (.\Grafos\FirstColor.jpg)
+![GraphFirstColor](.\Grafos\FirstColor.jpg)
 
 Otra ayuda visual es la disposición del grafo, como vemos es extremadamente caótico y, aunque los colores ayudan, es completamente ilegible. Para ello, lo estructuraremos mediante una disposición predeterminada:
 
-![Graph] (.\Grafos\FirstColorDisp.jpg)
+![GraphFirstColorDisp](.\Grafos\FirstColorDisp.jpg)
 
 Por último, en la pestaña de previsualización, le daremos los úlitmos retoques de formato para que sea fácil de comprender entero de un vistazo. Para conseguir esto haremos muchos cambios estéticos, desde el tamaño de las aristas hasta el texto que muestran las etiquetas. El resultafo final es el siguiente:
 
+![GraphEnron](.\Grafos\GrafoEnron.png)
 
-![Graph] (.\GrafoEnron1.png)
+El grafo es muy denso, veamos una versión simplificada.
 
+![GraphEnron](.\Grafos\GrafoEnronStripped.jpg)
 
+Este grafo es mucho más claro y visual ya que tenemos una muestra mucho más pequeña; aún así podemos sacar mucha información útil de estga muestra.
 
+Vemos que los nodos en el centro tienen mucho más tráfico que los periféricos, lo que nos da a entender que son personas importantes dentro de la empresa. Otro detalle a destacar es que los nodos periféricos apenas tienen comunicaciones entre sí, tienen muchas más comunicaciones dirigidas al centro, donde quizá estén sus superiores. Adjunto una imagen que nos permite ver mejor el centro, en el que confirmamos que están los jefes de Enron.
 
+![GraphEnron](.\Grafos\GrafoEnronStrippedZoom.jpg)
 
-
+### 2.2.2 Operaciones sobre el grafo
+Los grafos nos permiten hacer muchas cosas más allá de ayudarnos a visualizar un puñado de datos; también es posible realizar operaciones sobre ellos para obtener propiedades y relaciones. Veamos algunos ejemplos.
 
 
 
