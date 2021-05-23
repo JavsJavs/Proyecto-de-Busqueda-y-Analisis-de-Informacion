@@ -124,6 +124,10 @@ Podemos observar como el camino más corto entre el vicepresidente Presto y el c
 ### 2.3.1 Transitividad
 La transitividad en un grafo es la probabilidad de que la red tenga nodos adyacentes interconectados, es decir, la existencia de subcomunidades o clústeres cuyos miembros están altamente relacionados.
 
+Un ejemplo de grafo con una transitividad alta es el inferior, en el que vemos claramente dos clústeres de grupos diferentes.
+
+![GraphEnron](.\Grafos\GrafoEjemplo.jpg)
+
 Para evular la transitividad de un grafo, utilizaremos la función "transitivity". Esta función tiene un parámetro llamado "type", el cual especifica entre un análisis local o global de los nodos.
 
 Con el siguiente código analizamos ambos tipos y extraemos un histograma de la transitividad local:
@@ -136,11 +140,27 @@ hist(transitivity(network.full, type="local"))
 
 La transitividad global nos da 0.4212257, lo que quiere decir que hay un número moderado de clústeres en el dataset.
 
+
+
 ### 2.3.2 Diámetro
-El diámetro del grafo es su longitud: el camino más corto entre dos nodos más largo del grafo.
+El diámetro del grafo es su longitud: el camino más largo del grafo; es decir, el mayor número de vértices que se han de atravesar para llegar desde un nodo hasta otro (con las condiciones de que no puedes recorrer dos veces el mismo nodo y no puedess volver sobre tus pasos).
 
+El diámetro del grafo inferior vemos que es de 10 nodos, puesto que podemos ir desde Hold hasta Tom atravesando todos los nodos.
 
-is a graph distance. In other words, a graph's diameter is the largest number of vertices which must be traversed in order to travel from one vertex to another when paths which backtrack, detour, or loop are excluded from consideration.
+![GraphEnron](.\Grafos\GrafoEjemplo.jpg)
+
+Para ver estas propiedades en nuestro dataset enronense, utilizaremos el siguiente código:
+
+```{r}
+diameter(network.full)
+```
+
+Para ver cuáles son estos nodos tan separados utilizaremos "farthest.nodes" y meteremos su output en "nodes" para que sea más legible:
+
+```{r}
+nodes[c(farthest.nodes(network.full)[["vertices"]]),]
+```
+
 ### 2.3.3 Reciprocidad
 
 
