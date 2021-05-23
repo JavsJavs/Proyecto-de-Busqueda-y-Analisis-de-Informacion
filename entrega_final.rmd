@@ -59,8 +59,7 @@ También podemos introducir estas keywords en una tabla como parámetros. En el 
 table(V(network.full)$status)
 ```
 
-## 2.2 Uso del grafo
-### 2.2.1 Visualización del grafo
+## 2.2 Visualización del grafo
 Los grafos son una herramienta muy útil para entender las propiedades de las relaciones de un conjunto de datos. Nos pueden mostrar cantidades enormes de información que, de otro modo, sería mucho más difícil encontrar.
 
 Uno de las mejores ventajas de los grafos es su propiedad visual; relacionar vértices con aristas es muy intuitivo, sencillo y eficaz, lo que facilita enormemente construir observaciones complejas sobre las interacciones simples del conjunto de datos.
@@ -106,8 +105,51 @@ Vemos que los nodos en el centro tienen mucho más tráfico que los periféricos
 
 ![GraphEnron](.\Grafos\GrafoEnronStrippedZoom.jpg)
 
-### 2.2.2 Operaciones sobre el grafo
-Los grafos nos permiten hacer muchas cosas más allá de ayudarnos a visualizar un puñado de datos; también es posible realizar operaciones sobre ellos para obtener propiedades y relaciones. Veamos algunos ejemplos.
+## 2.3 Operaciones sobre el grafo
+Los grafos nos permiten hacer muchas cosas más allá de ayudarnos a visualizar un puñado de datos; también es posible realizar operaciones sobre ellos para obtener propiedades y relaciones de los datos enronenses.
+
+Los grafos tienen muchas propiedades, entre ellas veremos las siguientes aplicadas a nuestro grafo: la transitividad, el diámetro, la reciprocidad, la densidad, y el censo de triadas. Antes de explicarlas individualmente, es importante entender la función en la que basan todas sus operaciones: "get shortest path" (búsqueda del camino más corto entre dos nodos).
+
+La función del camino más corto nos mostrará el recorrido de aristas más corto entre los nodos que le marquemos como input. En el caso de abajo, buscaremos el camino más corto entre un empleado con el mail "kevin.m.presto@enron.com" y otro con el apellido "Barbo":
+
+```{r}
+shortestExample = get.shortest.paths(from = V(network.full)$name == "kevin.m.presto@enron.com",
+                   to = V(network.full)$lastName == "Barbo",
+                   graph = network.full)
+nodes[c(shortestExample[["vpath"]][[1]]),]
+```
+
+Podemos observar como el camino más corto entre el vicepresidente Presto y el comerciante Barbo es de dos saltos, siendo el nodo intermedio el vicepresidente Hayslet; esto quiere decir que Barbo y Presto no han tenido comunicación oficial directa.
+
+### 2.3.1 Transitividad
+La transitividad en un grafo es la probabilidad de que la red tenga nodos adyacentes interconectados, es decir, la existencia de subcomunidades o clústeres cuyos miembros están altamente relacionados.
+
+Para evular la transitividad de un grafo, utilizaremos la función "transitivity". Esta función tiene un parámetro llamado "type", el cual especifica entre un análisis local o global de los nodos.
+
+Con el siguiente código analizamos ambos tipos y extraemos un histograma de la transitividad local:
+
+```{r}
+transitivity(network.full, type="global")
+transitivity(network.full, type="local")
+hist(transitivity(network.full, type="local"))
+```
+
+La transitividad global nos da 0.4212257, lo que quiere decir que hay un número moderado de clústeres en el dataset.
+
+### 2.3.2 Diámetro
+El diámetro del grafo es su longitud: el camino más corto entre dos nodos más largo del grafo.
+
+
+is a graph distance. In other words, a graph's diameter is the largest number of vertices which must be traversed in order to travel from one vertex to another when paths which backtrack, detour, or loop are excluded from consideration.
+### 2.3.3 Reciprocidad
+
+
+### 2.3.4 Densidad
+
+
+### 2.3.5 Censo de triadas
+
+
 
 
 
