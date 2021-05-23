@@ -13,21 +13,20 @@ Enron fue una empresa energética estadounidense que, a principios de los 2001, 
 Este dataset contiene vértices; que representan empleados de enron, y aristas; que representan emails enviados entre los diferentes empleados.
 
 ## 1.3 Veamos primero las dimensiones de los datos
+Antes de empezar, hemos de comprender la escala de este dataset, para ello comprobemos cuántos empleados y cuantos emails se mandaron en la empresa.
+
 ```{r}
-print("El número de aristas en el dataset:")
-nrow(edges.full)
-print("La descripción del objeto 'aristas':")
-str(edges.full)
-print("El número de nodos en el dataset:")
+print("Número de empleados de Enron:")
 nrow(nodes)
-print("La descripción del objeto 'aristas':")
-str(nodes)
+print("Número de mails enviadosen el dataset:")
+nrow(edges.full)
 ```
 
+Cada empleado envió una media de 414 mails a otro interno de la empresa; teniendo en cuenta que este dataset no abarca un gran periodo de tiempo (1999-2002), esto ya nos puede indicar algo ligeramente sospechoso, ya que normalmente no se necesita una comunicación tan continua y numerosa si no se trata de organizar a estas personas.
 
 # 2. Grafos
 ## 2.1 Creado y propiedades del grafo
-El siguiente paso será generar un grafo a partir del dataset de Enron.
+El siguiente paso para entender este dataset, será generar un grafo a partir del mismo. De esta forma nos será más fácil visualizarlo.
 
 Para ello, concatenaremos en un objeto nuevo los parámetros que queramos en el grafo. En este caso 'emisor', 'receptor', 'tipo', 'fecha' y 'sujeto'. Es importante destacar que queremos un grafo dirigido, ya que los emails tienen emisor y destinatario. El último parámetro le indica a la función que los vértices del grafo tiene que sacarlos del objeto 'nodos'.
 
@@ -53,7 +52,7 @@ V(network.full)[1:10]
 E(network.full)[1:10]
 ```
 
-También podemos introducir estas keywords en una tabla como parámetros. En el ejemplo de abajo estamos pasando todos los "status" (posición en la empresa) posibles a una tabla, lo que nos muestra el total de nodos (empleados) que tiene cada "status".
+También podemos introducir estas keywords en una tabla como parámetros. En el ejemplo de abajo estamos pasando todos los "status" (posición en la empresa) posibles a una tabla, lo que nos muestra el total de nodos (empleados) que tiene cada "status". Esto nos permite ver como está organizada la empresa jerárquicamente.
 
 ```{r}
 table(V(network.full)$status)
@@ -62,7 +61,7 @@ table(V(network.full)$status)
 ## 2.2 Visualización del grafo
 Los grafos son una herramienta muy útil para entender las propiedades de las relaciones de un conjunto de datos. Nos pueden mostrar cantidades enormes de información que, de otro modo, sería mucho más difícil encontrar.
 
-Uno de las mejores ventajas de los grafos es su propiedad visual; relacionar vértices con aristas es muy intuitivo, sencillo y eficaz, lo que facilita enormemente construir observaciones complejas sobre las interacciones simples del conjunto de datos.
+Una de las mejores ventajas de los grafos es su propiedad visual; relacionar vértices con aristas es muy intuitivo, sencillo y eficaz, lo que facilita enormemente construir observaciones complejas sobre las interacciones simples del conjunto de datos.
 
 La desventaja que tienen los grafos es que el ojo humano no puede entender la complejidad del enramado de un grafo mirando una tabla de relaciones; para nosotros es mucho más rápido entender un grafo mediante un esquema o dibujo. Por eso mismo y porque R no puede correrlo nativamente, utilizaremos una herramienta externa llamada Gephi, que nos ayudará a visualizar los mails de Enron una vez tengamos un grafo que podamos introducirle.
 
@@ -101,14 +100,18 @@ El grafo es muy denso, veamos una versión simplificada.
 
 Este grafo es mucho más claro y visual ya que tenemos una muestra mucho más pequeña; aún así podemos sacar mucha información útil de estga muestra.
 
-Vemos que los nodos en el centro tienen mucho más tráfico que los periféricos, lo que nos da a entender que son personas importantes dentro de la empresa. Otro detalle a destacar es que los nodos periféricos apenas tienen comunicaciones entre sí, tienen muchas más comunicaciones dirigidas al centro, donde quizá estén sus superiores. Adjunto una imagen que nos permite ver mejor el centro, en el que confirmamos que están los jefes de Enron.
+Vemos que los nodos en el centro tienen mucho más tráfico que los periféricos, lo que nos da a entender que son personas importantes dentro de la empresa.
+
+Otro detalle muy importante a destacar es que los nodos periféricos apenas tienen comunicaciones entre sí, tienen muchas más comunicaciones dirigidas al centro, donde quizá estén sus superiores. Esto podría indicar que estos empleados periféricos, al no hablar entre sí y no poder contrastar información, fueran manipulados por sus superiores y forzados a tomar parte en la estafa de forma incosciente. Si viéramos más relaciones entre los nodos exteriores, podríamos deducir que todos los componentes de la empresa sabían qué estaba pasando.
+
+Adjunto una imagen que nos permite ver mejor el centro, en el que confirmamos que están los jefes de Enron.
 
 ![GraphEnron](.\Grafos\GrafoEnronStrippedZoom.jpg)
 
 ## 2.3 Operaciones sobre el grafo
 Los grafos nos permiten hacer muchas cosas más allá de ayudarnos a visualizar un puñado de datos; también es posible realizar operaciones sobre ellos para obtener propiedades y relaciones de los datos enronenses.
 
-Los grafos tienen muchas propiedades, entre ellas veremos las siguientes aplicadas a nuestro grafo: la transitividad, el diámetro, la reciprocidad, la densidad, y el censo de triadas. Antes de explicarlas individualmente, es importante entender la función en la que basan todas sus operaciones: "get shortest path" (búsqueda del camino más corto entre dos nodos).
+Los grafos tienen muchas propiedades, entre ellas veremos las siguientes aplicadas a nuestro conjunto de datos: la transitividad, el diámetro, la reciprocidad, la densidad, y el censo de triadas. Antes de explicarlas individualmente, es importante entender la función en la que basan todas estas operaciones: "get shortest path" (búsqueda del camino más corto entre dos nodos).
 
 La función del camino más corto nos mostrará el recorrido de aristas más corto entre los nodos que le marquemos como input. En el caso de abajo, buscaremos el camino más corto entre un empleado con el mail "kevin.m.presto@enron.com" y otro con el apellido "Barbo":
 
@@ -140,12 +143,10 @@ hist(transitivity(network.full, type="local"))
 
 La transitividad global nos da 0.4212257, lo que quiere decir que hay un número moderado de clústeres en el dataset.
 
-
-
 ### 2.3.2 Diámetro
 El diámetro del grafo es su longitud: el camino más largo del grafo; es decir, el mayor número de vértices que se han de atravesar para llegar desde un nodo hasta otro (con las condiciones de que no puedes recorrer dos veces el mismo nodo y no puedess volver sobre tus pasos).
 
-El diámetro del grafo inferior vemos que es de 10 nodos, puesto que podemos ir desde Hold hasta Tom atravesando todos los nodos.
+El diámetro del grafo inferior vemos que es de 7 nodos, puesto que podemos ir desde Hold hasta Tom atravesando 6 nodos diferentes.
 
 ![GraphEnron](.\Grafos\GrafoEjemplo.jpg)
 
@@ -154,6 +155,8 @@ Para ver estas propiedades en nuestro dataset enronense, utilizaremos el siguien
 ```{r}
 diameter(network.full)
 ```
+
+Un diámetro de 5 nodos no nos dice mucho acerca de Enron. Este diámetro máximo podría ser un caso aislado de dos empleados que no hablaron entre sí, también podría ser la norma, dando a entender que es un grafo muy poco interconectado.
 
 Para ver cuáles son estos nodos tan separados utilizaremos "farthest.nodes" y meteremos su output en "nodes" para que sea más legible:
 
@@ -177,6 +180,8 @@ Para ver el índice de reciprocidad del dataset de Enron, utilizaremos la funci�
 ```{r}
 reciprocity(network.full)
 ```
+
+Esto confirma lo que hemos ido viendo, hay personas extremadamente conectadas y otras que menos.
 
 ### 2.3.4 Densidad
 La densidad de un grafo hace referencia a la relación entre el número de aristas de un grafo y el número máximo que podría tener el mismo grafo.
@@ -230,7 +235,6 @@ A las funciones "degree" podemos pasarle más de un vértice, en los siguientes 
 head(nodes[order(degree(network.full, v = V(network.full), mode = c("total")), decreasing = TRUE),], n = 10L)
 
 ```
-
 
 ```{r}
 head(nodes[order(degree(network.full, v = V(network.full), mode = c("in")), decreasing = TRUE),], n = 10L)
