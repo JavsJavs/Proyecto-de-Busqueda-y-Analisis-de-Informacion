@@ -1,10 +1,16 @@
-# 1. Primeros pasos
+# 1 Primeros pasos
 ## 1.1 Cargamos librerías y dataset
 ```{r}
 setwd("C:/Users/Javs/Downloads/Clase/3/3.2/BusquedaYAnalisisDeLaInformacion/Final")
 load("enron_data_revised.rda")
 library(igraph)
 library(gplots)
+library(quanteda)
+library(quanteda.textplots)
+library(topicmodels)
+library(stringr)
+library(RColorBrewer)
+library(wordcloud)
 ```
 
 ## 1.2 Antes de empezar, hemos de entender las características del dataset
@@ -24,7 +30,7 @@ nrow(edges.full)
 
 Cada empleado envió una media de 414 mails a otro interno de la empresa; teniendo en cuenta que este dataset no abarca un gran periodo de tiempo (1999-2002), esto ya nos puede indicar algo ligeramente sospechoso, ya que normalmente no se necesita una comunicación tan continua y numerosa si no se trata de organizar a estas personas.
 
-# 2. Grafos
+# 2 Grafos
 ## 2.1 Creado y propiedades del grafo
 El siguiente paso para entender este dataset, será generar un grafo a partir del mismo. De esta forma nos será más fácil visualizarlo.
 
@@ -329,9 +335,43 @@ Grafo original             |  Grafo social
 ![GraphEnron](.\Grafos\GrafoEnron.png)  |  ![GraphEnron](.\Grafos\GrafoSocialEnron.png)
 
 
+# 3 Text Mining
+En este apartado del trabajo, exploraremos en profundidad la parte de minado de texto de la asignatura aplicado a Enron.
 
+## 3.1 Generación de corpus
+Para empezar nuestro análisis de contenido, primero crearemos un corpus a partir de todos los mensajes que contiene nuestro dataset enronense. Para ello accederemos a la propiedad cuerpo del objeto aristas.
 
+```{r}
+enronCorpus <- corpus(edges.full$body)
+palabras <- tokens(enronCorpus,
+                            remove_punct = TRUE,
+                            remove_numbers = TRUE,
+                            remove_url = TRUE)
+enronMatriz1 <- dfm(palabras, tolower = TRUE)
+```
 
+## 3.2 Limpieza de texto
+Antes de realizar operaciones, comprobemos cuáles son las palabras más frecuentes en el dataset.
+
+```{r}
+topfeatures(textoMatriz)
+```
+
+Estas palabras no nos dicen nada acerca de las conversaciones que tienen los empleados de enron, así que comencemos a filtrar palabras y expresiones comunes que tengan poco significado para nuestro análisis.
+
+```{r}
+palabras2 <- tokens(enronCorpus, 
+                            remove_punct = TRUE,
+                            remove_numbers = TRUE,
+                            remove_url = TRUE,
+                            remove_symbols = TRUE)
+my_stopwords <- c(as.character(c(0:9)), stopwords("english"), "now")
+
+enronMatriz2 <- dfm(palabras2, tolower = TRUE)
+enronMatriz2 <- dfm_remove(enronMatriz2, my_stopwords)
+print("'Top features' de la matriz sin las stopwords: ")
+topfeatures(enronMatriz2)
+```
 
 
 
