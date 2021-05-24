@@ -11,6 +11,7 @@ library(topicmodels)
 library(stringr)
 library(RColorBrewer)
 library(wordcloud)
+library(SentimentAnalysis)
 ```
 
 ## 1.2 Antes de empezar, hemos de entender las características del dataset
@@ -558,24 +559,40 @@ Encuentro que el segundo tópico es un misterio, tiene muy pocos trigramas, esto
 El tercer tópico engloba los tres tópicos de los bigramas, contiene la mayoría de los nombres propios (de tres palabras). 
 
 
+## 3.6 Análisis de sentimiento
+
+```{r}
+mailSample <- sample(edges.full$body, 1000)
+length(mailSample)
+```
 
 
+```{r}
+mailSample[6]
+sentimentExample <- analyzeSentiment(mailSample[6])
+str(sentimentExample)
+convertToBinaryResponse(sentimentExample)$SentimentQDAP
+```
 
+```{r}
+sentimentOverall <- analyzeSentiment(mailSample)
+```
 
+```{r}
+str(sentimentOverall)
+sentimentOverallBinary <- convertToBinaryResponse(sentimentOverall)$SentimentQDAP
+```
 
+```{r}
+summary(sentimentOverall$SentimentQDAP)
+hist(sentimentOverall$SentimentQDAP)
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
+```{r}
+sentimentOverall2 <- sentimentOverall
+summary(sentimentOverall$SentimentHE)
+hist(sentiment$SentimentHE)
+```
 
 
 
