@@ -447,6 +447,143 @@ Esta nube es menos interesante en mi opinión ya que los trigramas parecen no da
 Por último, estudiaremos los diferentes tópicos que se generan automáticamente por R. Para ello, generaremos diferentes WordClouds según los tópicos generados, tanto para bigramas como para trigramas.
 
 ### 3.5.1 Tópicos de bigramas
+Utilizaremos el código siguiente para generar los WordClouds basados en los tópicos de los bigramas.
+
+```{r}
+enronBigramaDfm <- dfm_trim(enronMatrizBigrama, min_termfreq = 10)
+
+set.seed(100)
+
+if (require(topicmodels)) {
+   bigramaLDA <- LDA(convert(enronBigramaDfm, to = "topicmodels"), k = 3)
+   get_terms(bigramaLDA, 3)
+}
+
+kk <- bigramaLDA@beta
+colnames(kk) <- bigramaLDA@terms
+kk[, 5:10]
+
+#Propiedades del wordcloud de topicos
+png(file="topics_wordcloud.png",
+    width=3600,
+    height=1200,
+    res = 300,
+    bg = "black")
+
+#Los wordclous de los tres topicos en una linea
+par(mfrow=c(1, 3))
+
+for (k in 1:length(kk[,1])) {
+  topic1 <- kk[k,]
+  v <- topic1
+  d <- data.frame(word = names(v), rank= rank(v))
+  d <- d[order(-d$rank),]
+  d$freq <- d$rank - max(d$rank) + 100
+  pal2 <- brewer.pal(11,"Spectral")
+  wordcloud(d$word,
+            d$freq, 
+            scale = c(1.2, 0.05),
+            max.words = 200, 
+            random.order = FALSE, 
+            rot.per = 0, 
+            colors = pal2,
+            random.color = TRUE)
+  title(main = paste(k),
+        font = 10,
+        col.main = "yellow")
+}
+```
+
+![GraphEnron](.\topics_wordcloud.png)
+
+He decidido dividir los bigramas en tres tópicos. Estos no son muy claros ya que hay bigramas como "jeff_dasovich" que están en varios tópicos y los nombres propios dominan todos los WordClouds.
+
+
+### 3.5.2 Tópicos de trigramas
+Utilizaremos el código siguiente para generar los WordClouds basados en los tópicos de los trigramas.
+
+```{r}
+enronTrigramaDfm <- dfm_trim(enronMatrizTrigrama, min_termfreq = 10)
+
+set.seed(100)
+
+if (require(topicmodels)) {
+   trigramaLDA <- LDA(convert(enronTrigramaDfm, to = "topicmodels"), k = 3)
+   get_terms(trigramaLDA, 3)
+}
+
+kk <- trigramaLDA@beta
+colnames(kk) <- trigramaLDA@terms
+kk[, 5:10]
+
+#Propiedades del wordcloud de topicos
+png(file="topics_wordcloud_tri.png",
+    width=3600,
+    height=1200,
+    res = 300,
+    bg = "black")
+
+#Los wordclous de los tres topicos en una linea
+par(mfrow=c(1, 3))
+
+for (k in 1:length(kk[,1])) {
+  topic1 <- kk[k,]
+  v <- topic1
+  d <- data.frame(word = names(v), rank= rank(v))
+  d <- d[order(-d$rank),]
+  d$freq <- d$rank - max(d$rank) + 100
+  pal2 <- brewer.pal(11,"Spectral")
+  wordcloud(d$word,
+            d$freq, 
+            scale = c(1.2, 0.05),
+            max.words = 200, 
+            random.order = FALSE, 
+            rot.per = 0, 
+            colors = pal2,
+            random.color = TRUE)
+  title(main = paste(k),
+        font = 10,
+        col.main = "yellow")
+}
+```
+
+![GraphEnron](.\topics_wordcloud_tri.png)
+
+Estos WordCloud son ligeramente más reveladores que los de los tópicos generados por bigramas; pero tampoco son las gran cosa.
+
+El primer tópico, parece estar relacionado con eventos/tareas que tienen que suceder. Al haber tantos "presentation_tomorrow", podemos deducir que se celebraban presentaciones de forma periódica en Enron y que se avisaba a los empleados por email de las mismas, nada muy emocionante.
+
+Encuentro que el segundo tópico es un misterio, tiene muy pocos trigramas, esto podría ser indicador de que quizá hubiera sido mejor hacer un número diferente de tópicos (pero no puedo esperar 20 minutos para cada vez que corro la función e ir probando con facilidad). 
+
+El tercer tópico engloba los tres tópicos de los bigramas, contiene la mayoría de los nombres propios (de tres palabras). 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
