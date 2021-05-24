@@ -619,7 +619,10 @@ hist(sentimentOverall$SentimentHE)
 hist(sentimentOverall$SentimentGI)
 ```
 
+# 4 Conclusión
+Para concluir este trabajo, me gustaría destacar lo extremadamente complejo y enrevesado que fue el caso de Enron, y teniendo esas condiciones de partida, lo mucho que facilita entender un enramado tan complejo como ese tener las herramientas adecuadas en tu mano. Gracias a los grafos y el minado de texto es relativamente simple entender las diferentes tramas que iban sucediendo en la empresa, destacando sospechosos y asegurando inocentes.
 
+Se tratan de herramientas extremadamente potentes y, con un buen uso, pueden ser de una utilidad enorme. Diría que me inclino ligeramente más por el estudio de grafos que por el minado de texto, al menos para este caso. Gracias al estudio de grafos nos ha sido posible entender relaciones complejas entre miembros de Enron de un vistazo, mientras que el minado de texto nos ha mostrado que los mails que se enviaban entre ellos cuando les funcionaba ese "chanchullo" eran denotaban, generalmente, tonos felices. No obstante, creo que el minado de texto puede tener aplicaciones mucho más prometedoras y potentes en otras áreas o con otros conjuntos de datos
 
 
 
