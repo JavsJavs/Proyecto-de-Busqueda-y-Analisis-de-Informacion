@@ -12,6 +12,7 @@ library(stringr)
 library(RColorBrewer)
 library(wordcloud)
 library(SentimentAnalysis)
+library(quanteda.textstats)
 ```
 
 ## 1.2 Antes de empezar, hemos de entender las características del dataset
@@ -560,38 +561,62 @@ El tercer tópico engloba los tres tópicos de los bigramas, contiene la mayorí
 
 
 ## 3.6 Análisis de sentimiento
+Por último, haremos un pequeño análisis del sentimiento de la mayoría de los correos. Para ilustrar como funciona el código, utilizaremos primero una muestra aleatoria de 100 correos (lo cual ya es bastante representativo de todo el conjunto).
 
 ```{r}
-mailSample <- sample(edges.full$body, 1000)
+mailSample <- sample(edges.full$body, 100)
 length(mailSample)
 ```
 
+Una vez tengamos nuestra muestra, probaremos el análisis de sentimiento sobre un email aleatorio. Veamos que contiene el email.
 
 ```{r}
-mailSample[6]
-sentimentExample <- analyzeSentiment(mailSample[6])
-str(sentimentExample)
+mail_number <- sample(1:100, 1)
+mailSample[mail_number]
+```
+
+Y ahora veamos que nos dice la máquina que piensa sobre el sentimiento de ese email.
+
+```{r}
+sentimentExample <- analyzeSentiment(mailSample[mail_number])
 convertToBinaryResponse(sentimentExample)$SentimentQDAP
 ```
 
+Como podemos observar, es lo más preciso que se puede ser a la hora de asignar un booleano a un sentimiento, que de primeras suena muy abstacto.
+
+Bien, ahora veremos el sentimiento de toda la muestra según diferentes patrones y como de mucho se acercan a una muestra mucho más grande.
+
 ```{r}
 sentimentOverall <- analyzeSentiment(mailSample)
+print("QDAP:")
+table(convertToBinaryResponse(sentimentOverall)$SentimentQDAP)
+print("HE:")
+table(convertToBinaryResponse(sentimentOverall)$SentimentHE)
+print("GI:")
+table(convertToBinaryResponse(sentimentOverall)$SentimentGI)
 ```
 
-```{r}
-str(sentimentOverall)
-sentimentOverallBinary <- convertToBinaryResponse(sentimentOverall)$SentimentQDAP
-```
+Y ahora calculemos los mismos sentimientos de la muestra grande.
 
 ```{r}
-summary(sentimentOverall$SentimentQDAP)
+BigSample <- sample(edges.full$body, 10000)
+sentimentSampleOverall <- analyzeSentiment(BigSample)
+print("QDAP:")
+table(convertToBinaryResponse(sentimentSampleOverall)$SentimentQDAP)
+print("HE:")
+table(convertToBinaryResponse(sentimentSampleOverall)$SentimentHE)
+print("GI:")
+table(convertToBinaryResponse(sentimentSampleOverall)$SentimentGI)
+```
+
+Como vemos, las relaciones se mantienen, es decir, que una muestra relativamente pequeña ya representa bien el dataset completo. Es importante destacar como el sentimiento de los emails es mayoritariamente positivo.
+
+Por último, veamos unos histogramas sobre los sentimientos para poder visualizar mejor en qué parte del espectro sentimental se encuentran nuestros empleados enronenses.
+
+```{r}
 hist(sentimentOverall$SentimentQDAP)
-```
-
-```{r}
-sentimentOverall2 <- sentimentOverall
-summary(sentimentOverall$SentimentHE)
-hist(sentiment$SentimentHE)
+hist(sentimentOverall$SentimentHE)
+hist(sentimentOverall$SentimentGI)
 ```
 
 
